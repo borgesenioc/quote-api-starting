@@ -8,7 +8,11 @@ const PORT = process.env.PORT || 4001;
 
 app.use(express.static('public'));
 
-//add the router variables
+//add a route to GET a random quote
+app.get('/api/quotes/random', (req, res, next) => {
+    const randomQuote = getRandomElement(quotes);
+    res.send(randomQuote);
+});
 
 //add a GET
 
