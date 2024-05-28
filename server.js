@@ -13,13 +13,13 @@ app.use(express.static('public'));
 app.use(express.json());
 
 // Route to GET a random quote
-app.get('/api/quotes/random', (req, res, next) => {
+app.get('/api/quotes/random', (req, res) => {
     const randomQuote = getRandomElement(quotes);
     res.send({ quote: randomQuote });
 });
 
 // Route to GET all quotes, or a specific person's quotes if there is a query
-app.get('/api/quotes', (req, res, next) => {
+app.get('/api/quotes', (req, res) => {
     const personQuery = req.query.person;
     if (personQuery) {
         const personQuotes = quotes.filter(element => element.person === personQuery);
@@ -30,11 +30,10 @@ app.get('/api/quotes', (req, res, next) => {
 });
 
 // Route to POST a new quote
-app.post('/api/quotes', (req, res, next) => {
+app.post('/api/quotes', (req, res) => {
+    console.log('Request body:', req.body); // Log the request body
     const newQuote = req.body.quote;
     const newPerson = req.body.person;
-
-    console.log('Received new quote:', req.body);
 
     if (newQuote && newPerson) {
         const newObject = { quote: newQuote, person: newPerson };

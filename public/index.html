@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <title>Quote API</title>
@@ -20,13 +19,39 @@
       <button id="fetch-quotes">Fetch all Quotes</button>
     </div>
     <div>
-      <input id="author" value="">
+      <input id="author" placeholder="Author" value="">
       <button id="fetch-by-author">Fetch by Author</button>
     </div>
   </div>
-  <div id="quote-container">
-    
-  </div>
-  <script src="script.js"></script>
+  <div id="quote-container"></div>
+  <script>
+    document.getElementById('fetch-random').addEventListener('click', () => {
+      fetch('/api/quotes/random')
+        .then(response => response.json())
+        .then(data => {
+          const quoteContainer = document.getElementById('quote-container');
+          quoteContainer.innerHTML = `<div class="single-quote"><p class="quote-text">"${data.quote.quote}"</p><p class="quote-author">- ${data.quote.person}</p></div>`;
+        });
+    });
+
+    document.getElementById('fetch-quotes').addEventListener('click', () => {
+      fetch('/api/quotes')
+        .then(response => response.json())
+        .then(data => {
+          const quoteContainer = document.getElementById('quote-container');
+          quoteContainer.innerHTML = data.quotes.map(quote => `<div class="single-quote"><p class="quote-text">"${quote.quote}"</p><p class="quote-author">- ${quote.person}</p></div>`).join('');
+        });
+    });
+
+    document.getElementById('fetch-by-author').addEventListener('click', () => {
+      const author = document.getElementById('author').value;
+      fetch(`/api/quotes?person=${author}`)
+        .then(response => response.json())
+        .then(data => {
+          const quoteContainer = document.getElementById('quote-container');
+          quoteContainer.innerHTML = data.quotes.map(quote => `<div class="single-quote"><p class="quote-text">"${quote.quote}"</p><p class="quote-author">- ${quote.person}</p></div>`).join('');
+        });
+    });
+  </script>
 </body>
 </html>

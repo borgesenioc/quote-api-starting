@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-  <title>Quote API</title>
+  <title>Add a New Quote</title>
   <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <link rel="icon" type="image/x-icon"ç href="favicon.ico">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
   <h1>Quote API</h1>
@@ -14,18 +13,40 @@
     <a href="add-quote.html">Add a New Quote</a>
   </nav>
   <h2>Add a New Quote</h2>
-  <div class="inputs">
-    <label for="quote">Quote text:</label>
-    <input id="quote" value="">
-    <label for="person">Person:</label>
-    <input id="person" value="">
-  </div>
-  <div>
-    <button id="submit-quote">Submit Your Quote</button>
-  </div>
-  <div id="new-quote">
-    
-  </div>
-  <script src="add-quote.js"></script>
+  <form id="quoteForm" class="inputs">
+    <input type="text" id="quote" name="quote" placeholder="Quote" required>
+    <input type="text" id="person" name="person" placeholder="Person" required>
+    <button type="submit">Add Quote</button>
+  </form>
+  <div id="responseMessage"></div>
+  <script>
+    document.getElementById('quoteForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const quote = document.getElementById('quote').value;
+      const person = document.getElementById('person').value;
+
+      fetch('/api/quotes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ quote, person })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Success:', data);
+        document.getElementById('responseMessage').innerText = 'Quote added successfully!';
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        document.getElementById('responseMessage').innerText = 'Error adding quote. Please try again.';
+      });
+    });
+  </script>
 </body>
 </html>
